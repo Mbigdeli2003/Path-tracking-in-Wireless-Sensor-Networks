@@ -1,0 +1,106 @@
+%% 2 0ut of n
+function [S]=Surface(X_i,y_path_i,n_cand,m_cand,SIGMA_i)
+syms x1 x2 x3 x4
+BETA_i_1=atan((n_cand(1)-X_i)/(m_cand(1)-y_path_i))+SIGMA_i(1);
+BETA_i_2=atan((n_cand(1)-X_i)/(m_cand(1)-y_path_i))-SIGMA_i(1);
+BETA_i_3=atan((n_cand(2)-X_i)/(m_cand(2)-y_path_i))+SIGMA_i(2);
+BETA_i_4=atan((n_cand(2)-X_i)/(m_cand(2)-y_path_i))+SIGMA_i(2);
+
+BETA_i_1=tan(BETA_i_1);
+BETA_i_2=tan(BETA_i_2);
+BETA_i_3=tan(BETA_i_3);
+BETA_i_4=tan(BETA_i_4);
+
+
+L_1=BETA_i_1*(x1-n_cand(1))+m_cand(1);
+L_2=BETA_i_2*(x2-n_cand(1))+m_cand(1);
+L_3=BETA_i_3*(x3-n_cand(2))+m_cand(2);
+L_4=BETA_i_4*(x4-n_cand(2))+m_cand(2);
+
+A=solve('L_1','L_2','L_3','L_4');
+X1=sym2poly(A.x1);
+X2=sym2poly(A.x2);
+X3=sym2poly(A.x3);
+X4=sym2poly(A.x4);
+
+y1=feval(L_1,X1);
+y2=feval(L_2,X2);
+y3=feval(L_3,X3);
+y4=feval(L_4,X4);
+X=[X1 X2 X3 X4];
+Y=[y1 y2 y3 y4];
+k=1;
+for i=1:length(X)
+k=k+1;
+    R(i)=(X(i)-X(k))/(Y(i)-Y(k));
+end
+k=1;
+j=0
+for i=1:length(X)
+    k=k+1;
+    
+        r(i)=(X(i)-X(k))/(Y(i)-Y(k));
+        if r(i)==max(R) || r(i)==min(R)
+            j=j+1;
+            XX(j)=X(i);
+            YY(j)=Y(i);
+        end
+        j=0;
+    if r(i)<max(R) && r(i)>min(R)
+        j=j+1
+        l_1=r(i)*(x1-X(i))+Y(i);
+        l_2=(-1/r(i))*(x2-XX(j))+YY(j);
+        l_3=(-1/r(i))*(x3-XX(j+1))+YY(j+1)
+        AA=solve('l_1','l_2','l_3');
+        xx2=sym2poly(AA.x2);
+        xx3=sym2poly(AA.x3);
+        yy2=feval(l_2,xx2);
+        yy3=feval(l_3,xx3);
+        dis_X_ghaede=abs(X(i)-X(k));
+        dis_Y_ghaede=abs(Y(i)-Y(K));
+        dis_X_Y_ghaede=((dis_X_ghaede)^2+(dis_Y_ghaede^2))^(1/2);
+        dis_x_1_ertefa=abs(XX(j)-xx2);
+        dis_x_2_ertefa=abs(XX(j+1)-xx3);
+        dis_y_1_ertefa=abs(YY(j)-y2);
+        dis_y_2_ertefa=abs(YY(j+1)-y3);
+        dis_xy_1_ertefa=((dis_x_1_ertefa)^2+(dis_y_1_ertefa)^2)^(1/2);
+        dis_xy_2_ertefa=((dis_x_2_ertefa)^2+(dis_y_2_ertefa)^2)^(1/2);
+        S=0.5*(dis_X_Y_ghaede*dis_xy_1_ertefa)+0.5*(dis_X_Y_ghaede*dis_xy_2_ertefa);
+    end
+end
+end
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
